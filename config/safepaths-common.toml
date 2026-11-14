@@ -1,0 +1,27 @@
+["Path Settings"]
+	#Allow footsteps to create new paths.
+	enablePathCreation = true
+	#Allow tracked paths to restore their original terrain. Records and elapsed time are retained while disabled; expired paths may revert when enabled again.
+	enablePathDecay = true
+	#Sneaking players do not add construction passes. Existing roads still receive traffic.
+	sneakPreventsPathCreation = false
+	#Ticks from the first counted pass to reach requiredPasses. Later passes do not extend this window. 24,000 ticks = 1 Minecraft day.
+	# Default: 24000
+	# Range: 1000 ~ 72000
+	constructionTime = 24000
+	#Number of steps to create a path (e.g., 20)
+	# Default: 20
+	# Range: 1 ~ 1000
+	requiredPasses = 20
+	#Time in ticks for an unused path to revert (72,000 ticks = 3 Minecraft days).
+	# Default: 72000
+	# Range: 1000 ~ 240000
+	decayTime = 72000
+	#Enable or disable movement speed boost on paths.
+	enableSpeedBoost = true
+	#Global road speed bonus as a fraction (0.2 = +20%, range 0.0 to 5.0). Rules without a speed inherit this value.
+	# Default: 0.2
+	# Range: 0.0 ~ 5.0
+	speedMultiplier = 0.2
+	#Custom block conversions: source_block -> target_block, optionally @ speed (0.2 = +20%). Omit speed to use the global bonus.
+	customConversions = ["minecraft:grass_block -> minecraft:dirt_path", "minecraft:dirt -> minecraft:dirt_path", "minecraft:sand -> minecraft:dirt_path", "minecraft:gravel -> minecraft:gravel", "biomeswevegone:lush_grass_block -> biomeswevegone:lush_dirt_path", "biomeswevegone:lush_dirt -> biomeswevegone:lush_dirt_path", "biomeswevegone:sandy_dirt -> biomeswevegone:sandy_dirt_path", "biomesoplenty:origin_grass_block -> minecraft:dirt_path", "regions_unexplored:peat_grass_block -> regions_unexplored:peat_dirt_path", "regions_unexplored:peat_dirt -> regions_unexplored:peat_dirt_path", "regions_unexplored:silt_grass_block -> regions_unexplored:silt_dirt_path", "regions_unexplored:silt_dirt -> regions_unexplored:silt_dirt_path", "regions_unexplored:chalk_grass_block -> regions_unexplored:chalk_dirt_path", "regions_unexplored:chalk_dirt -> regions_unexplored:chalk_dirt_path"]

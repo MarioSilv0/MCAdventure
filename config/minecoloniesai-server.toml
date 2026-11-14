@@ -1,0 +1,336 @@
+[ai]
+	#Enable remote Ollama citizen dialogue.
+	enabled = true
+	#Remote Ollama endpoint.
+	endpoint = "http://127.0.0.1:11434"
+	#Sensitive server-only API token. Leave empty when authentication is not required.
+	apiToken = ""
+	#Remote Ollama model name.
+	model = "qwen3:4b"
+	#Optional Gemini fallback model, tried once when ai.model is a Gemini model and a request to it fails with a transient/quota/model-availability error (HTTP 429 rate-limit, 503 service-unavailable, or 404 model-not-found). Reuses the SAME ai.endpoint and ai.apiToken as the primary model - no second API key or project is needed, and only the model name in the request changes. Not used at all for a non-Gemini ai.endpoint/ai.model (e.g. Ollama). Leave blank to disable model-level fallback (the provider then behaves exactly as with a single configured Gemini model). If this equals ai.model, it is treated as blank so the same request is never made twice.
+	fallbackModel = ""
+	#Remote Ollama timeout in seconds.
+	# Default: 20
+	# Range: 1 ~ 120
+	timeoutSeconds = 20
+
+[tts]
+	#TTS backend: 'cosyvoice' (the default base voice generator - requires tts.cosyvoice.endpoint to be configured; see that setting - citizens are silent until it is), or 'http' (remote/self-hosted TTS server, required on a Linux host such as most dedicated server hosts). RVC (see rvc.*) is an optional voice-conversion layer applied on top of whichever provider is selected here, never a replacement for it.
+	provider = "cosyvoice"
+
+	[tts.http]
+		#HTTP TTS endpoint (only used when tts.provider=http). Accepts a JSON POST {"input":..., "voice":..., "speed":...} and returns WAV audio (raw bytes, or JSON {"output_base64":...} - the same shape rvc.endpoint already uses). Blank disables HTTP TTS.
+		endpoint = ""
+		#Sensitive server-only bearer token for HTTP TTS.
+		apiToken = ""
+		#Optional model field sent to the HTTP TTS service; left out of the request entirely when blank.
+		model = ""
+		#HTTP TTS timeout in seconds.
+		# Default: 30
+		# Range: 1 ~ 300
+		timeoutSeconds = 30
+
+	[tts.cosyvoice]
+		#CosyVoice TTS endpoint (only used when tts.provider=cosyvoice). Points at a locally-hosted CosyVoice HTTP server (e.g. http://127.0.0.1:8124/v1/tts/synthesize). Blank disables CosyVoice.
+		endpoint = ""
+		#Sensitive server-only bearer token for CosyVoice.
+		apiToken = ""
+		#CosyVoice timeout in seconds.
+		# Default: 30
+		# Range: 1 ~ 300
+		timeoutSeconds = 30
+		#Last-resort fallback CosyVoice reference/voice id, used only when a citizen's voice profile has neither an explicit referenceVoiceId (custom or from the gender/age defaults.json category, e.g. male_base/female_base) nor a backend voice configured. Blank means no voice/reference_voice is sent at all - never invented.
+		defaultVoice = ""
+		#Phase 3B: stream CosyVoice audio to Simple Voice Chat as it is generated (lower time-to-first-audio) instead of waiting for the complete WAV, for citizens whose voice has no RVC model configured (RVC always uses the existing complete-buffer path regardless of this setting). Only used when tts.provider=cosyvoice and the CosyVoice server supports POST <endpoint>/stream. Default false: enable only after validating streaming works correctly in your environment - existing installs are completely unaffected until this is turned on.
+		streaming = false
+
+[stt]
+	#Enable remote STT for Simple Voice Chat input.
+	enabled = true
+	#Whisper-compatible POST /v1/audio/transcriptions endpoint. Blank disables STT (see SimpleVoiceChatRuntime) until a real endpoint is configured here.
+	endpoint = ""
+	#Sensitive server-only bearer token for STT. Never share this file with clients.
+	apiToken = ""
+	#Model field sent to the Whisper-compatible service.
+	model = "whisper-1"
+	#Optional STT language code; leave empty for auto-detection.
+	language = ""
+	#Remote STT timeout in seconds.
+	# Default: 20
+	# Range: 1 ~ 120
+	timeoutSeconds = 20
+
+[rvc]
+	#Enable a remote RVC provider when one is configured.
+	enabled = false
+	#Remote RVC endpoint. The mod does not bundle RVC models.
+	endpoint = ""
+	#Sensitive server-only bearer token for RVC.
+	apiToken = ""
+	#Remote RVC timeout in seconds.
+	# Default: 30
+	# Range: 1 ~ 300
+	timeoutSeconds = 30
+	#Logical remote RVC voice ID, never a Minecraft file path.
+	defaultVoice = ""
+	#Default RVC pitch shift.
+	# Default: 0
+	# Range: -24 ~ 24
+	defaultPitch = 0
+	#Default RVC index rate.
+	# Default: 0.75
+	# Range: 0.0 ~ 1.0
+	defaultIndexRate = 0.75
+	#Default RVC consonant protect value.
+	# Default: 0.33
+	# Range: 0.0 ~ 1.0
+	defaultProtect = 0.33
+	#Default RVC F0 method.
+	defaultF0Method = "rmvpe"
+
+[voice]
+	#Citizen listening range in blocks.
+	# Default: 24
+	# Range: 0 ~ 256
+	playerListeningRange = 24
+	#Citizen speaking range in blocks.
+	# Default: 24
+	# Range: 0 ~ 256
+	citizenHearingRange = 24
+	#Full citizen voice volume distance in blocks.
+	# Default: 4.0
+	# Range: 0.0 ~ 256.0
+	fullVolumeDistance = 4.0
+	#Silence duration that ends one STT segment.
+	# Default: 300
+	# Range: 50 ~ 5000
+	segmentationSilenceMillis = 300
+	#Maximum STT segment duration.
+	# Default: 10
+	# Range: 1 ~ 60
+	maxSegmentSeconds = 10
+	#Maximum mono PCM samples buffered per voice segment.
+	# Default: 480000
+	# Range: 4800 ~ 2880000
+	maxBufferedPcmSamples = 480000
+	#Cooldown after a completed voice interaction.
+	# Default: 500
+	# Range: 0 ~ 30000
+	interactionCooldownMillis = 500
+	#Maximum remote STT requests.
+	# Default: 2
+	# Range: 1 ~ 32
+	maxConcurrentStt = 2
+
+#Automatic citizen-to-citizen conversations (idle colonists notice each other and talk, using the existing AI/TTS/RVC/Simple Voice Chat pipeline). All LLM work runs on a bounded worker thread, never the server thread.
+[social]
+	#Master switch. When true, the legacy text-only citizen conversation tracker is disabled in favour of this voiced system, and new colonies default to on.
+	enabled = true
+	#How often (server ticks) to look for a new conversation.
+	# Default: 200
+	# Range: 40 ~ 12000
+	scanIntervalTicks = 200
+	#Citizens considered as conversation initiators per colony per scan; a rotating window, so cost stays flat regardless of colony size.
+	# Default: 6
+	# Range: 1 ~ 64
+	initiatorsPerScan = 6
+	#Maximum distance in blocks for a conversation to START. Enforced deterministically; the LLM never decides this.
+	# Default: 5.0
+	# Range: 1.0 ~ 16.0
+	initiationRadius = 5.0
+	#Base per-scan chance an eligible citizen starts talking, before personality/leisure/work multipliers.
+	# Default: 0.5
+	# Range: 0.0 ~ 1.0
+	baseInitiationChance = 0.5
+	#Maximum simultaneous automatic conversations server-wide.
+	# Default: 2
+	# Range: 1 ~ 16
+	maxConcurrent = 2
+	#Maximum alternating turns before a conversation winds down.
+	# Default: 6
+	# Range: 2 ~ 20
+	maxTurns = 6
+	#Hard lifetime of a conversation in seconds.
+	# Default: 45
+	# Range: 10 ~ 300
+	maxDurationSeconds = 45
+	#Minimum ticks between the end of one spoken line and the request for the next, so audio turns never overlap.
+	# Default: 30
+	# Range: 10 ~ 200
+	minTurnGapTicks = 30
+	#If the two citizens drift further apart than this (blocks) for too long, the conversation ends.
+	# Default: 6.0
+	# Range: 2.0 ~ 32.0
+	maxPairDistance = 6.0
+	#Ticks before the same pair may converse again.
+	# Default: 12000
+	# Range: 200 ~ 400000
+	pairCooldownTicks = 12000
+	#Allow walking conversations (one citizen leads, the other follows) as well as stationary ones.
+	walkingEnabled = true
+	#Chance a new conversation is a walking one rather than stationary (only when walkingEnabled).
+	# Default: 0.35
+	# Range: 0.0 ~ 1.0
+	walkingProbability = 0.35
+	#Also run the finished transcript through the existing asynchronous MemoryExtractionService worker. Off by default: the basic conversation records a short gist memory without this extra LLM call.
+	transcriptMemoryExtraction = false
+	#When two citizens finish a conversation and one of them authoritatively owns an active MineColonies work order, write a citizen-keyed note into the other's memory recording it as THAT speaker's project. This is the only mechanism by which one citizen learns another's project: presence, occupation and colony state never establish it. The note can never read as the learner's own work. On by default.
+	recordWorkKnowledge = true
+	#Phase Action: when two citizens finish a conversation and BOTH authoritatively share a need right now (e.g. both hungry), record a low-importance 'we agreed to sort it out together' memory for each and nudge each to reconsider on the next mind sweep. Each citizen then forms and validates its own intention independently - there is no shared controller and nothing bypasses validation or execution. On by default; inert unless mind.enabled.
+	sharedNeedCoordination = true
+	#Allow child citizens to take part. Off for the initial implementation to reduce edge cases.
+	allowChildren = false
+	#Verbose [SOCIAL DEBUG] tracing of the automatic conversation scanner and every session (scan trigger, colony/citizen counts, chosen initiators, exact pair distances, eligibility rejections, initiation chance and roll, session creation, turn requests, LLM result outcome, termination reason). No AI tokens or full responses are logged. Off by default - enable only when diagnosing why conversations do or do not start.
+	debugLogging = false
+
+	#Colony Social Intelligence (Phase 11). A deterministic aggregation/propagation layer on top of the existing social conversations: colony-level social-graph analytics, a colony-scoped aggregate reputation for players/citizens, and gossip that spreads durable facts between colonists through the EXISTING citizen-to-citizen conversations and the EXISTING memory system. The LLM only ever phrases a gossip line; whether gossip spreads, to whom, how far, and what it does to reputation are all deterministic. Gossip requires social.enabled; it is never a gameplay mechanic and never a world fact.
+	[social.gossip]
+		#Master switch for gossip and the colony social-graph / reputation refresh. Also requires social.enabled. When off, no gossip memories are created and no colony social context is added to any prompt.
+		enabled = true
+		#How many times a single fact may be retold before it stops spreading. Each retelling appends a '- heard from <name>' provenance note and drops the memory's confidence one step, so a fact also stops once its confidence would fall past UNCERTAIN.
+		# Default: 2
+		# Range: 1 ~ 4
+		maxHops = 2
+		#The most facts one citizen may pass to the other in a single finished conversation (per direction).
+		# Default: 2
+		# Range: 0 ~ 8
+		maxFactsPerConversation = 2
+		#A memory's age-decayed importance must be at least this for it to be worth repeating. Keeps trivial small-talk from spreading.
+		# Default: 30
+		# Range: 1 ~ 100
+		minImportance = 30
+		#How often (server ticks) the colony social-graph and reputation snapshots are rebuilt from the current citizen profiles. Low-frequency: there is no per-tick or per-citizen loop.
+		# Default: 1200
+		# Range: 200 ~ 24000
+		refreshIntervalTicks = 1200
+		#Verbose [GOSSIP DEBUG] tracing of each gossip plan (which facts were passed, hop counts, confidence downgrades) and each colony snapshot refresh. No prompts or model output are logged. Off by default.
+		debugLogging = false
+
+#Colony Intelligence (Phase 12). A read-only deterministic analytics layer over authoritative MineColonies colony state (population, jobs, housing, construction, defense, wellbeing, logistics) plus the Phase 11 derived colony social snapshot. It computes a colony snapshot, graded needs/opportunities with evidence, a 0-100 pressure score, and a short posture phrase, and exposes them read-only through the /mcai Colony -> Colony Intelligence screen. There is NO LLM, no autonomous colony action, no colony command, and no persistence of any derived colony state. MineColonies remains authoritative for all colony gameplay.
+[colony]
+	#Master switch for Colony Intelligence. When off, no colony snapshots are built and the /mcai Colony Intelligence screen reports the feature is disabled.
+	enabled = true
+	#How often (server ticks) each colony's operational snapshot + assessment is rebuilt from live MineColonies state. Low-frequency: there is no per-tick or per-citizen loop. The minimum is 600 ticks so this can never approach a per-tick scan; the GUI additionally builds a fresh snapshot on demand.
+	# Default: 2400
+	# Range: 600 ~ 24000
+	refreshIntervalTicks = 2400
+	#Verbose [COLONY DEBUG] tracing of each colony snapshot refresh (how many colonies were refreshed). No prompts or model output are logged. Off by default.
+	debugLogging = false
+	#Colony Priority Signal (Phase 13). When true, a small, bounded, DERIVED read of what the colony currently needs (a per-category pressure reduction of the Phase 12 assessment) is added to the autonomous intention prompt for an idle citizen. It is context only: it may bias WHICH of the allowed intentions the model proposes, but it is never Ground Truth, never a world fact, and never decides whether an intention passes deterministic validation. Also requires mind.enabled. There is no autonomous colony action and nothing is persisted. Off by default.
+	influenceIntentions = false
+
+#Autonomous Citizen Mind (Phase 7). A conservative, low-frequency loop: at a decision opportunity it builds the same grounded Unified Citizen Context used for dialogue, asks the model for one structured intention (off the server thread), deterministically validates it against live MineColonies state, and only then lets the EXISTING execution systems act. MineColonies stays authoritative for needs, sickness, raids, fleeing, sleep, mourning, jobs and navigation; the mind never interrupts a higher-priority MineColonies state.
+[mind]
+	#Master switch for autonomous citizen decisions. OFF by default - turn on only when you want citizens to act on their own between MineColonies tasks.
+	enabled = false
+	#Master switch for PLAYER-DIRECTED natural-language commands (e.g. a player telling a citizen "go to the tavern"), independent of mind.enabled above. mind.enabled only gates autonomous, idle-time citizen decisions; a command a player explicitly typed/spoke to a specific citizen is already player-authorized and should work even when autonomous behaviour is off. ON by default.
+	playerCommandsEnabled = true
+	#How often (server ticks) to look for citizens with a decision opportunity. The model is never called every tick; a sweep only considers idle citizens that are off cooldown and have no decision already in flight.
+	# Default: 600
+	# Range: 100 ~ 24000
+	decisionSweepIntervalTicks = 600
+	#Minimum ticks between autonomous decisions for the same citizen. Prevents decision spam; the cooldown starts when generation begins.
+	# Default: 2400
+	# Range: 200 ~ 400000
+	perCitizenCooldownTicks = 2400
+	#Maximum citizens per colony that may START a decision in a single sweep - a rotating window, so cost stays flat regardless of colony size.
+	# Default: 4
+	# Range: 1 ~ 64
+	citizensPerSweep = 4
+	#Verbose [MIND DEBUG] tracing of each autonomous decision (opportunity, generated intention type, validation result, execution result). No prompts or model responses are logged. Off by default.
+	debugLogging = false
+	#Phase Action: offer the full intention vocabulary (GET_FOOD, MOVE_TO, VISIT, RETURN_TO_WORK, FOLLOW_CITIZEN, HELP_CITIZEN, activity invites, ...) in the autonomous intention prompt. Every one is still deterministically validated against live MineColonies state and executed only through existing mechanisms; unsupported ones fail closed. On by default.
+	expandedActions = true
+	#Phase Action: give the AI a bounded whitelist of the colony's real, currently-built buildings (name, kind, and a location token). The AI may only name or navigate to a place on this list; anything else must be spoken about generally. On by default.
+	groundedLocations = true
+	#Colony Reality Snapshot: before each dialogue/intention, build an authoritative view of the colony's real buildings (with verified semantic capabilities - e.g. only a Restaurant supports eating, never a Tavern) and each citizen's real occupation and assigned workplace, and render a '=== COLONY REALITY - AUTHORITATIVE ===' section. This is what stops a citizen inventing 'my Builder's Hut' from a hut merely existing. Refreshed every time (never cached as a relationship). On by default.
+	colonyReality = true
+	#Also scan each generated dialogue line for an unsupported first-person work/ownership claim ("my hut", "I work at the farm", "I've been mining") that the speaker's authoritative reality does not support, and log it ([REALITY CHECK]). Advisory only - it never edits or blocks the spoken line or the voice pipeline; natural-language claim validation is not reliable enough to gate on. On by default.
+	dialogueRealityCheck = true
+	#Phase 19: after each autonomous decision, record ONE bounded, deterministic 'experience' memory of what the decision produced (the proposed intention plus the recorded outcome - never an invented cause). The existing memory dedup collapses repeated identical outcomes into one reinforced entry. Grounded, low-importance, persisted like any other citizen memory, and rendered only as historical context. Only active while mind.enabled. Model/infrastructure outcomes are never recorded.
+	recordDecisionExperiences = true
+	#Phase 19: when building an autonomous decision prompt, select the citizen's memories most relevant to its current situation (job plus the previous decision) and fill the rest of the bounded budget with the most recent memories, instead of using pure recency. Reuses the existing relevance ranking; when nothing is relevant it degrades to the previous recency window. Only affects mind.enabled prompts.
+	recallRelevantExperiences = true
+	#Phase 20: add a deterministic, grounded SHORT-TERM INTENT section to the autonomous intention prompt - a small ordered list of candidate 'focus' statements (continue current work, address an urgent need, respond to the nearby colonist, deal with the immediate threat, ...) synthesised only from facts already in the prompt (WORLD STATE, the situation assessment, the previous decision, the colony pressure read, and memories made relevant by current presence). It never invents a goal, project, event or request, assigns no numeric priorities, chooses nothing, and does not affect deterministic validation. Only affects mind.enabled prompts.
+	formShortTermIntent = true
+
+#Emotional State (Phase 8). Each citizen carries a temporary, deterministic feeling (happiness / anger / fear / stress, 0-100, baseline 0) that rises on known game events and decays exponentially back toward baseline. It is READ-ONLY context for the AI - it colours dialogue and can bias which intention the model proposes, but it is never Ground Truth, the LLM never writes it, and it never affects whether an intention passes deterministic validation. Decay is lazy (computed on read, O(1)); there is no per-tick emotion loop.
+[emotion]
+	#Master switch. When off, no emotion events are applied and no mood text is added to any prompt (citizens read as calm).
+	enabled = true
+	#Also add the citizen's mood as context to the autonomous intention prompt. Purely contextual - it can influence which intention the model chooses, never whether that intention is valid.
+	influenceIntentions = true
+	#The largest amount any single event may move one emotion (after personality scaling). Keeps a burst of events from jumping a citizen straight to 100.
+	# Default: 20
+	# Range: 1 ~ 100
+	maxEventDelta = 20
+	#Minimum server ticks between two applications of the same event kind to the same citizen. Prevents emotion spam from repeated identical events.
+	# Default: 1200
+	# Range: 0 ~ 400000
+	eventCooldownTicks = 1200
+	#How often the existing periodic citizen sweep also flushes lazy decay to the stored value, so a citizen who never speaks still has an accurate saved mood. A write only happens when the coarse intensity band actually changed. 0 disables this settle pass entirely (decay is still applied on every read).
+	# Default: 1200
+	# Range: 0 ~ 24000
+	settleIntervalTicks = 1200
+	#Verbose [EMOTION DEBUG] tracing of each applied event (citizen, event, resulting bands). No prompts or model output are logged. Off by default.
+	debugLogging = false
+
+	[emotion.halfLife]
+		#Anger half-life in ticks (time for the distance from baseline to halve). Anger cools the fastest.
+		# Default: 6000
+		# Range: 1 ~ 2400000
+		anger = 6000
+		#Fear half-life in ticks.
+		# Default: 12000
+		# Range: 1 ~ 2400000
+		fear = 12000
+		#Happiness half-life in ticks.
+		# Default: 24000
+		# Range: 1 ~ 2400000
+		happiness = 24000
+		#Stress half-life in ticks. Stress recovers the slowest.
+		# Default: 48000
+		# Range: 1 ~ 2400000
+		stress = 48000
+
+#Personal Goals (Phase 9). Each citizen carries up to one persistent, deterministic goal per type - improve at their current job, and settle into a routine of sleeping at home. Goals are created and evaluated from live MineColonies state on the existing ~1200-tick citizen sweep (there is no per-tick loop) and are READ-ONLY context for the AI: they can colour dialogue and bias WHICH intention the model proposes, but they are never Ground Truth, the LLM never writes them, and they never affect whether an intention passes deterministic validation. A goal existing never causes an action to execute.
+[goals]
+	#Master switch. When off, no goals are created, evaluated, persisted, or added to any prompt, and no goal-related emotion events fire.
+	enabled = true
+	#Also add the citizen's active goals as context to the autonomous intention prompt. Purely contextual - it can influence which intention the model chooses, never whether that intention is valid.
+	influenceIntentions = true
+	#Total MineColonies skill XP a citizen must gain since taking up (or last changing) their job for the 'improve at work' goal to count as complete. Progress is (xp gained / this) as 0-100.
+	# Default: 250
+	# Range: 1 ~ 100000000
+	improveAtWorkXpTarget = 250
+	#Verbose [GOAL DEBUG] tracing of each goal creation, completion, failure and prune. No prompts or model output are logged. Off by default.
+	debugLogging = false
+
+#Advanced Relationships (Phase 10). Each citizen holds a directed, structured relationship toward every player and citizen it has interacted with: affinity (liking, -100..100), familiarity (how well it knows them, 0..100), and trust (-100..100). Affinity and trust drift slowly back toward 0 over in-game DAYS; familiarity never decays. The existing conversation affinity deltas are unchanged - familiarity and trust are additive. Relationships are READ-ONLY social context for the AI (never Ground Truth, never LLM-writable, never affect intention validation or execution). Evaluated lazily on read plus a low-frequency settle on the existing citizen sweep; there is no per-tick loop and no personality-based scaling.
+[relationships]
+	#Master switch for the advanced model (familiarity, trust, decay, labels, richer prompt context). When off, the classified affinity delta is still applied (legacy behaviour preserved) but no familiarity/trust movement, no decay, and no relationship summary in prompts.
+	enabled = true
+	#The largest amount any single interaction may move one relationship dimension. Affinity deltas from the classifiers are -5..+5, so this is headroom.
+	# Default: 8
+	# Range: 1 ~ 100
+	maxEventDelta = 8
+	#Minimum server ticks between two applications of the same interaction to the same (subject, target). 0 (the default) leaves relationship updates unthrottled, matching pre-Phase-10 behaviour; the existing conversation systems already pace themselves.
+	# Default: 0
+	# Range: 0 ~ 400000
+	eventCooldownTicks = 0
+	#How often the existing periodic citizen sweep folds lazy affinity/trust decay into the stored value. A write only happens when the derived relationship label or a coarse band actually changed. 0 disables this settle pass (decay is still applied on every read).
+	# Default: 1200
+	# Range: 0 ~ 24000
+	settleIntervalTicks = 1200
+	#Verbose [RELATIONSHIP DEBUG] tracing of each applied interaction and label change. No prompts or model output are logged. Off by default.
+	debugLogging = false
+
+	[relationships.halfLife]
+		#Affinity decay half-life in ticks (time for the distance from 0 to halve). Default 240000 ticks is about 10 in-game days - far slower than any emotion half-life.
+		# Default: 240000
+		# Range: 1 ~ 24000000
+		affinity = 240000
+		#Trust decay half-life in ticks. Default 336000 ticks is about 14 in-game days; trust recovers the slowest.
+		# Default: 336000
+		# Range: 1 ~ 24000000
+		trust = 336000

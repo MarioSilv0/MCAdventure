@@ -1,0 +1,7 @@
+[colonies]
+	#Let a player own several colonies at once: placing a new Town Hall founds another colony
+	#instead of offering to delete or abandon the one they have. MineColonies' own allowinfinitecolonies
+	#setting does not do this (it only adds the abandon button). Where MineColonies asks for 'the'
+	#colony of a player - /minecolonies home, commands without a colony id, a flag placed outside
+	#any colony - it takes one of them.
+	severalColoniesPerPlayer = false

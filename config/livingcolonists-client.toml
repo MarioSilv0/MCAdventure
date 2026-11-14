@@ -1,0 +1,3 @@
+#On: colonists' lines in the colony chat show in the chat and as speech bubbles. Off: as speech bubbles
+#only; answers to your own messages, your private talks and order questions stay in the chat. Default on.
+colonyChatLines = true

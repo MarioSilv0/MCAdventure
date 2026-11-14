@@ -1,0 +1,184 @@
+#Connection to an OpenAI-compatible chat completions API
+[llm]
+	#Address of an OpenAI-compatible API, without /chat/completions. Examples: https://api.deepseek.com,
+	#https://openrouter.ai/api/v1, http://127.0.0.1:11434/v1 for a local Ollama. Default:
+	#https://api.deepseek.com.
+	baseUrl = "https://api.deepseek.com"
+	#Model for colonists' replies, for working out whom a message is for, and for colony chatter: the
+	#most used one, so fast and cheap is best. The exact name from the provider's model list (see Load
+	#models). Default: deepseek-flash.
+	chatModel = "deepseek-flash"
+	#Model for rare, heavier work: writing colonists' backgrounds and writing conversations down into
+	#memory. Can be smarter and slower, for example deepseek-v4-pro. Empty: the chat model does it.
+	characterModel = ""
+	#The provider's API key. Kept in the config file as plain text, so don't share the file. Leave empty
+	#to read the key from the environment variable below instead. Never sent to players.
+	apiKey = ""
+	#Name of the environment variable that holds the API key; used when the key above is empty. Default:
+	#LIVINGCOLONISTS_API_KEY.
+	apiKeyEnv = "LIVINGCOLONISTS_API_KEY"
+	#On: colonists talk through the language model below. Off, or with no API key: they react with set lines
+	#from the language files, and everything else (the notebook, promises from MineColonies' windows, gifts,
+	#letters, help, the calendar, happiness) works as usual. Default on.
+	useModel = true
+	#How long to wait for one answer before giving up and retrying, in seconds. From 1 to 300, default
+	#30. Reasoning models may need 30 to 60.
+	# Default: 30
+	# Range: 1 ~ 300
+	timeoutSeconds = 30
+	#How many times to retry after a temporary failure: a timeout, a rate limit (429), a server error
+	#(5xx) or a lost connection. Waits 1, 3, then 8 seconds. A wrong key or a bad request is not retried.
+	#From 0 to 5, default 3.
+	# Default: 3
+	# Range: 0 ~ 5
+	retries = 3
+	#On: colonists look things up and take orders through function calling (stock, buildings, research,
+	#jobs, crafting, couriers, guards and more); needs perception above off. Turn off if your provider
+	#doesn't support tools. Default on.
+	useTools = true
+	#Upper limit of tokens for one answer. Reasoning models count their thinking here too, so keep it
+	#well above a chat line; the mod raises it by itself for heavy tasks. From 16 to 32768, default 2000.
+	# Default: 2000
+	# Range: 16 ~ 32768
+	maxTokens = 2000
+	#How varied the answers are: 0 is predictable, 1 is natural, 2 is wild. From 0 to 2, default 1.
+	# Default: 1.0
+	# Range: 0.0 ~ 2.0
+	temperature = 1.0
+	#Extra fields added to every request, as a JSON object, for provider-specific options; {} for none.
+	#Example: {"thinking":{"type":"disabled"}} turns off DeepSeek's thinking for faster but less careful
+	#answers.
+	extraParams = "{}"
+
+	#A second API to use when the main one fails even after retries, for example a local model
+	[llm.fallback]
+		#On: when the main API still fails after all retries, the request goes to a second API, for example a
+		#local model. Needs the fallback address and model. Default off.
+		enabled = false
+		#Address of the fallback API, without /chat/completions. Example for Ollama:
+		#http://127.0.0.1:11434/v1.
+		baseUrl = "http://127.0.0.1:11434/v1"
+		#Model of the fallback API, used for every kind of request. Example: qwen2.5:14b. Empty: no fallback.
+		model = ""
+		#Key of the fallback API, plain text. Empty for APIs that need none, such as a local model.
+		apiKey = ""
+		#Environment variable with the fallback key, used when the key above is empty. Empty: none.
+		apiKeyEnv = ""
+
+#Optional: an OpenAI-compatible embeddings API, so colonists recall the remembered facts a talk
+#touches by meaning, in any language. Without a key, facts are picked by the words in common.
+[embeddings]
+	#Address of the embeddings API, without /embeddings. Default: OpenRouter.
+	baseUrl = "https://openrouter.ai/api/v1"
+	#Embedding model, as the provider names it. It must know the players' languages: baai/bge-m3 does,
+	#and is cheap and fast. Empty: embeddings off.
+	model = "baai/bge-m3"
+	#Key of the embeddings API, plain text. Empty: the variable below. Without a key, embeddings are off,
+	#except for an API on this machine (localhost), which needs none.
+	apiKey = ""
+	#Environment variable with the embeddings key, used when the key above is empty.
+	apiKeyEnv = "LIVINGCOLONISTS_EMBEDDINGS_API_KEY"
+
+#How deep colonists' personalities, knowledge and memory go, and who may talk to them
+[behaviour]
+	#On: colonists talk. Off: the mod is quiet on the whole server: no replies, no lines of their own,
+	#no requests to the model; players' chat goes on as usual. A colony's owner turns their own colony
+	#off with /lc colony off. Default on.
+	enabled = true
+	#How deep colonists go, and how many tokens they spend. MINIMAL: the colony run by chat, plain
+	#answers, look-ups and orders, no character, memory or chatter, cheapest. LIGHT: a short character and memory. DEFAULT: the balance. IMMERSIVE:
+	#detailed knowledge, long memory, long colony chats, the most tokens. Personality, perception, memory
+	#and conversation and initiative can override parts of it. Default: DEFAULT.
+	#Allowed Values: MINIMAL, LIGHT, DEFAULT, IMMERSIVE
+	profile = "DEFAULT"
+	#Colonists' archetypes and backgrounds. profile: as the profile says. off: none. low: the archetype
+	#only. default: the archetype and a short background. high: a longer background.
+	personality = "profile"
+	#What colonists know about themselves and the colony. profile: as the profile says. off: nothing.
+	#low: their work and needs. default: also home, food, health, mood, weather, family, coworkers and
+	#colony look-ups. high: also siblings and more detail.
+	perception = "profile"
+	#What colonists remember of talks, promises and gossip. profile: as the profile says. off: nothing.
+	#low: 4 lines of a talk and 5 facts, for about 2 days. default: 10 lines and 15 facts, about a week.
+	#high: 40 lines and 60 facts, about a month.
+	memory = "profile"
+	#How colony chats run on their own. profile: as the profile says. off: one answer to a player. low:
+	#up to 4 lines. default: up to 8. high: up to 16, colonists chat with each other a lot. Also turns
+	#colonists' own colony talk about events and their promise reminders on or off.
+	conversation = "profile"
+	#How often colonists write to a player first, unprompted: about a problem of theirs (more pointed if
+	#it stays unsolved, until they give up asking), something the player told them, news or small talk.
+	#Any colonist, while the player is in the colony and not in a conversation, at uneven times.
+	#profile: as the profile says. off: never. low: about every half hour. default: about every 12
+	#minutes. high: about every 6 minutes.
+	initiative = "profile"
+	#On: colonists' lines also show as speech bubbles over their heads, and dots while they type; the
+	#chat line stays. Private lines bubble only for their player. Default on.
+	speechBubbles = true
+	#On: walking past a colonist, now and then they say something in a speech bubble (the time of day, the
+	#weather, how they are), nothing in the chat. Needs speech bubbles. Default on.
+	barks = true
+	#On: players get speech bubbles too, for their chat and colony chat lines, and dots while they type.
+	#Default off.
+	playerBubbles = false
+	#How far away, in blocks, speech bubbles are seen. From 8 to 64, default 24.
+	# Default: 24
+	# Range: 8 ~ 64
+	bubbleRange = 24
+	#Shortest time between two messages of one player to colonists, in seconds; guards against spam. 0
+	#turns it off. From 0 to 60, default 3.
+	# Default: 3
+	# Range: 0 ~ 60
+	cooldownSeconds = 3
+	#What colonists call players instead of their nicknames. One entry per player:
+	#Nickname=Name,Other name,Rare name; the first name is used most. In this file it is a list, like
+	#["Steve=Steven,Stevie", "Alex=Alexandra,Alex"]; on the settings screen separate entries with ';', like
+	#Steve=Steven,Stevie; Alex=Alexandra,Alex. Empty: nicknames.
+	playerNames = []
+	#More advancements colonists hear about and bring up as hearsay when a player comes back, besides
+	#the big ones built in (the dragon, the Wither, diamonds, netherite and more). One entry per advancement:
+	#id, or id=what colonists say, in English after "word has it they". In this file it is a list, like
+	#["create:andesite_alloy=learned to make andesite alloy", "mymod:boss"]; on the settings screen
+	#separate entries with ';'. Without words, the advancement's title is used. Empty: only the built-in ones.
+	extraAdvancements = []
+	#On: colony members (owner, officers, friends) read their colony's chat and write to it from
+	#anywhere. Off: only players inside the colony's borders take part. Default off.
+	colonyChatAnywhere = false
+	#On: only the colony's owner, officers and friends may talk to its colonists, and only the owner and
+	#officers may give orders. Off: any player inside the colony may. Default on.
+	membersOnly = true
+	#How much the mod writes to the server log. ALL: colonists' chat lines, what they do (look-ups, orders,
+	#promises, memory) and technical lines. NO_CHAT: the same without the chat lines. TECHNICAL: start-up,
+	#settings changes, warnings and errors. OFF: errors only.
+	#Allowed Values: ALL, NO_CHAT, TECHNICAL, OFF
+	logLevel = "ALL"
+
+#Optional limits against chat spam and runaway costs on public servers; 0 turns a limit off
+[limits]
+	#How many messages one player may send to colonists in an hour of server time; after that they wait.
+	#Against spam on public servers. 0: no limit (default).
+	# Default: 0
+	# Range: 0 ~ 100000
+	messagesPerPlayerPerHour = 0
+	#How many tokens (prompt and answer together) the whole server may spend in a day; after that
+	#colonists rest until midnight. Counted since the server started. 0: no limit (default).
+	# Default: 0
+	# Range: 0 ~ 9223372036854775807
+	tokensPerDay = 0
+
+#Friendship with players (#67): letters from colonists, help in trouble and friendship in their work
+[friendship]
+	#On: friends now and then leave a letter with a small gift in the Colony Notebook. Default on.
+	letters = true
+	#On: when a player is badly hurt in their colony, a friend nearby helps by their job. Default on.
+	helpInTrouble = true
+	#How much faster, in percent, a colonist walks with the best friendship, and slower with a grudge.
+	#0 turns it off. Default 25.
+	# Default: 25
+	# Range: 0 ~ 50
+	friendshipWalkPercent = 25
+	#How much more experience in their main skill, in percent, a colonist gets with the best friendship,
+	#and less with a grudge. 0 turns it off. Default 50.
+	# Default: 50
+	# Range: 0 ~ 100
+	friendshipXpPercent = 50

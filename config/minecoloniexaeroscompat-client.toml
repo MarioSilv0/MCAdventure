@@ -1,0 +1,6 @@
+#Show the claimed area and border of colonies on the map.
+#You can switch this in game with the key set under Controls.
+showClaims = true
+#Show the building icons of colonies on the map.
+#You can switch this in game with the key set under Controls.
+showBuildings = true

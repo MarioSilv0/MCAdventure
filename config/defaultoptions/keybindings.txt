@@ -1,0 +1,8 @@
+key_key.curios.open.desc:key.keyboard.i:
+key_key.epicfight.mover_skill:key.keyboard.z:
+key_key.guideme.guide:key.keyboard.n:
+key_key.enderio.travel_staff:key.keyboard.home:
+key_key.mcvanillatweaks.colony_guide:key.keyboard.period:
+key_key.minecoloniesai.engage_citizen:key.keyboard.comma:
+key_key.minecoloniexaeroscompat.toggle_claims:key.keyboard.page.up:
+key_key.resourcehud.limit:key.keyboard.page.down:

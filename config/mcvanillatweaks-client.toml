@@ -1,0 +1,72 @@
+#Vanilla-style screens replacing MineColonies' windows. Turn one off to get MineColonies' own windows back.
+[screens]
+	#Replace MineColonies' citizen windows with the vanilla-style citizen screen (tabs, portrait, equipment, inventory).
+	vanillaCitizenScreen = true
+	#Replace MineColonies' town hall windows with the vanilla-style town hall screen.
+	vanillaTownHallScreen = true
+	#Replace the hut windows every MineColonies building shares (home page, workers, settings, statistics) with a vanilla-style screen.
+	vanillaHutScreen = true
+	#Replace MineColonies' university windows (hut page, research branches, research trees) with vanilla-style screens.
+	vanillaUniversityScreen = true
+	#Replace the build tool windows (blueprint browser, style choice) with vanilla-style screens.
+	vanillaBuildTool = true
+	#Replace Domum Ornamentum's Architect's Cutter screen with a larger vanilla-style screen (named groups, variant grid).
+	vanillaArchitectsCutter = true
+	#Replace MineColonies' other windows (colony founding, confirmations, abandoned huts, supply camp, scan tools, decorations, graves...) with vanilla-style screens.
+	vanillaDialogs = true
+
+#The resource HUD: panels of the pinned builders (J pins the held Resource Scroll, P arranges the panels, H shows or hides them).
+[hud]
+
+	#Where the panels are drawn and how big.
+	[hud.layout]
+		#Default screen corner of the HUD. Pinned panels can be moved anywhere with the layout editor (P).
+		#Allowed Values: TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+		position = "TOP_LEFT"
+		#Horizontal distance from the screen edge, in GUI pixels.
+		# Default: 4
+		# Range: 0 ~ 1000
+		offsetX = 4
+		#Vertical distance from the screen edge, in GUI pixels.
+		# Default: 4
+		# Range: 0 ~ 1000
+		offsetY = 4
+		#HUD size multiplier.
+		# Default: 1.0
+		# Range: 0.5 ~ 2.0
+		scale = 1.0
+
+	#What each panel shows.
+	[hud.content]
+		#Also show the construction site of the Resource Scroll held in hand, even if it is not pinned.
+		showHeldScroll = true
+		#Show how far the construction is (share of the blueprint's materials already placed, the Resource Scroll's 'Used' value) with a progress bar.
+		showConstruction = true
+		#Show the 'Supplied % / Used %' line, same values as the Resource Scroll.
+		showPercentage = true
+		#Also list resources the builder already has in sufficient quantity.
+		showCompleted = true
+		#Draw the item icons.
+		showIcons = true
+		#Maximum number of construction sites displayed at the same time.
+		# Default: 3
+		# Range: 1 ~ 10
+		maxPanels = 3
+		#Maximum number of resource lines per construction site.
+		# Default: 8
+		# Range: 1 ~ 64
+		maxLines = 8
+		#Seconds between two data refresh requests sent to the server for each displayed site (same request as opening the Resource Scroll).
+		# Default: 5
+		# Range: 2 ~ 60
+		refreshSeconds = 5
+
+#Beacon beams drawn in the world.
+[beams]
+	#Show a red beacon beam above the grave of each dead citizen, until the grave is collected.
+	deathBeams = true
+	#What a click on a builder's "building finished" chat message does: BOTH (beacon beam and coordinates), BEAM, POSITION (coordinates in the chat) or OFF.
+	#Allowed Values: BOTH, BEAM, POSITION, OFF
+	completionClick = "BOTH"
+	#Say in the action bar, when entering someone else's colony, how many buildings it has and which key opens the colony guide.
+	colonyGuideMessage = true

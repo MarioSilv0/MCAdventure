@@ -1,0 +1,13 @@
+{
+  "visible": false,
+  "hideComplete": true,
+  "bgOpacity": 153,
+  "maxRows": 10,
+  "scale": 1.0,
+  "hudWidth": 175,
+  "useCustomPos": false,
+  "posX": 0,
+  "posY": 0,
+  "excludedBuilders": [],
+  "syncWithJEI": false
+}

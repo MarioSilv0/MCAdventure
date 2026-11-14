@@ -1,0 +1,17 @@
+#What this server tells players who have the mod installed.
+[sharing]
+	#MEMBERS = a player only gets the colonies they own or are an officer or friend in.
+	#ALL = every player with the mod gets the claims and buildings of all colonies.
+	#OFF = this server sends nothing; players only see what they discover themselves.
+	#Allowed Values: ALL, MEMBERS, OFF
+	shareMode = "MEMBERS"
+	#true = server operators (permission level 2 or higher) get all colonies, even in MEMBERS mode.
+	opsSeeAll = true
+	#false = send only the claimed area, name and centre of a colony, not its buildings.
+	shareBuildings = true
+
+[performance]
+	#How often (in seconds) the server checks the colonies for changes.
+	# Default: 5
+	# Range: 1 ~ 60
+	checkIntervalSeconds = 5

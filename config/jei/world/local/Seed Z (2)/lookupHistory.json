@@ -1,0 +1,13 @@
+[
+  {"version":1},
+  {"ingredient":{"id":"sophisticatedbackpacks:backpack"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"sophisticatedbackpacks:copper_backpack"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"sophisticatedbackpacks:backpack","components":"{\"sophisticatedcore:accent_color\":-425955,\"sophisticatedcore:main_color\":-425955}"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"sophisticatedbackpacks:backpack","components":"{\"sophisticatedcore:accent_color\":-3715395,\"sophisticatedcore:main_color\":-3715395}"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"sophisticatedbackpacks:backpack","components":"{\"sophisticatedcore:accent_color\":-12930086,\"sophisticatedcore:main_color\":-12930086}"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"sophisticatedbackpacks:backpack","components":"{\"sophisticatedcore:accent_color\":-816214,\"sophisticatedcore:main_color\":-816214}"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"sophisticatedbackpacks:backpack","components":"{\"sophisticatedcore:accent_color\":-6447721,\"sophisticatedcore:main_color\":-6447721}"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"waystones:purple_sharestone"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"enderio:soul_vial","components":"{\"enderio:soul\":{entity_tag:{},entity_type:\"minecraft:silverfish\"}}"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"supplementaries:faucet"},"type":"item_stack","bookmarkType":"INGREDIENT"}
+]

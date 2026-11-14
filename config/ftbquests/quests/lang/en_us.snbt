@@ -1,0 +1,54 @@
+{
+	quest.0B009391E3F76D6E.quest_desc: ["A Fisherman's Hut is another way to provide food. Build it near a suitable fishing area."]
+	quest.0B009391E3F76D6E.title: "Add a Fisherman"
+	quest.0D6E099A1A242153.quest_desc: [
+		"Bring a Town Hall block and the gold Build Tool from your supply start."
+		"Claim this step to unlock the Town Hall placement milestone."
+	]
+	quest.0D6E099A1A242153.title: "Found Your Colony"
+	quest.0F409DACBEB7BBF8.quest_desc: ["Use this deployer for the alternate supply-chest start. The camp and chest options are alternatives."]
+	quest.0F409DACBEB7BBF8.title: "Supply Chest"
+	quest.1BB571557F74D3A1.quest_desc: [
+		"Choose an open, mostly level area with room for the Town Hall, first worker huts, paths, and future expansion."
+		"Keeping the first building plots close together makes it easier to get the colony started."
+	]
+	quest.1BB571557F74D3A1.title: "Choose a Colony Site"
+	quest.1E1870FAD295DEDE.quest_desc: ["Use this deployer for a camp-style start. Choose the site before placing this one-time supply start."]
+	quest.1E1870FAD295DEDE.title: "Supply Camp"
+	quest.22F4C38E79DEFF1E.quest_desc: [
+		"Choose either the Supply Camp Deployer or the Supply Chest Deployer in the next step."
+		"The supply start provides the Town Hall needed to found the colony."
+	]
+	quest.22F4C38E79DEFF1E.title: "Choose a Supply Start"
+	quest.23012F6C4C522CEB.quest_desc: ["A Lumberjack provides a steady supply of logs for buildings, tools, and colony requests."]
+	quest.23012F6C4C522CEB.title: "Establish a Lumberjack"
+	quest.490628CE108A833A.quest_desc: ["A Delivery Person transports supplies between the Warehouse and other colony buildings."]
+	quest.490628CE108A833A.title: "Set Up Deliveries"
+	quest.4EEF0962CC249F30.quest_desc: ["A Cook prepares meals for citizens. A reliable food source helps keep the new colony supplied."]
+	quest.4EEF0962CC249F30.title: "Provide Cooked Meals"
+	quest.5ACC8D7212BCF59D.quest_desc: ["Complete this checkmark to claim one basic Sophisticated Backpack."]
+	quest.5ACC8D7212BCF59D.title: "Pack Your Supplies"
+	quest.57C889EC980D33D9.quest_desc: ["A Farmer supplies crops for the colony. Provide a field, seeds, and the materials needed for planting."]
+	quest.57C889EC980D33D9.title: "Grow Food for the Colony"
+	quest.583A7AA84FEC027F.quest_desc: [
+		"After placing the Town Hall, use the Builder's Hut item from the quest reward to start construction."
+		"A Builder cannot build or upgrade huts above the Builder's Hut level."
+	]
+	quest.583A7AA84FEC027F.title: "Build the Builder's Hut"
+	quest.67E8B8DCFC93F832.quest_desc: ["The Warehouse is the colony's central storage. Workers and couriers use it to deliver and retrieve requested supplies."]
+	quest.67E8B8DCFC93F832.title: "Build a Warehouse"
+	quest.6BB0C51EE8CA5966.quest_desc: ["A Miner gathers stone and ores for the colony. Ladders, torches, and support materials help keep the mine productive."]
+	quest.6BB0C51EE8CA5966.title: "Open a Mine"
+	quest.6EEA012FA11C7C08.quest_desc: [
+		"Gather basic building materials, food, fuel, and tools before settling."
+		"Leave enough clear space around the colony center for the first huts."
+	]
+	quest.6EEA012FA11C7C08.title: "Prepare for Settlement"
+	quest.75CBFD0F90772359.quest_desc: ["A Tavern provides housing for visitors and lets you recruit them as new citizens."]
+	quest.75CBFD0F90772359.title: "Build a Tavern"
+	quest.7D3489901AA47547.quest_desc: [
+		"This milestone confirms that the Town Hall is placed and the colony has been founded."
+		"Claim the reward for your first huts: Builder, Citizen, Farmer, Lumberjack, and Miner."
+	]
+	quest.7D3489901AA47547.title: "Place the Town Hall"
+}

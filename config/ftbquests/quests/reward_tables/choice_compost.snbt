@@ -1,0 +1,40 @@
+{
+	id: "7ACE4BD2F80103E3"
+	loot_size: 1
+	order_index: 4
+	rewards: [
+		{ id: "19D9F94866DFFC7A", item: { count: 1, id: "minecolonies:barrel_block" } }
+		{
+			count: 16
+			id: "0E2E4351B75A4D6D"
+			item: {
+				count: 1
+				id: "minecolonies:compost"
+			}
+		}
+		{
+			count: 64
+			id: "5D7304C916D1C388"
+			item: {
+				count: 1
+				id: "minecraft:oak_leaves"
+			}
+		}
+		{
+			count: 64
+			id: "5DA0CF28513C0AB3"
+			item: {
+				count: 1
+				id: "minecraft:wheat_seeds"
+			}
+		}
+		{
+			count: 16
+			id: "36A7DB0DBD5F811E"
+			item: {
+				count: 1
+				id: "minecraft:bone_meal"
+			}
+		}
+	]
+}
