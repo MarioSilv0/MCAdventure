@@ -1,0 +1,22 @@
+# Minecraft runtime and generated data
+/crash-reports/
+/downloads/
+/dynamic-data-pack-cache/
+/dynamic-resource-pack-cache/
+/local/
+/logs/
+/screenshots/
+/saves/
+/XaeroWaypoints_BACKUP*/
+/xaero/
+
+# CurseForge instance metadata and per-user settings
+/.curseclient
+/minecraftinstance.json
+/options.txt
+/user-prefs.json
+/usercache.json
+/usernamecache.json
+
+# Installed by the CurseForge modpack
+/mods/
