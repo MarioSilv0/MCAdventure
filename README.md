@@ -16,9 +16,15 @@ instance. Keep installed mod JARs, instance metadata, saves, logs, and personal
 settings out of Git. When a full config file is needed, keep it only when it
 represents or supports an intentional pack-level setting.
 
+Generated world data, player-specific settings, mod caches, backup files,
+and first-launch GUI state are ignored. Pack defaults belong in `config/` or
+`defaultconfigs/`; first-launch keybind defaults belong in
+`config/defaultoptions/keybindings.txt`.
+
 ## Starting a colony
 
-On first login, you receive an FTB Quests book and enter Adventure Mode. Open
+On first login, you receive an FTB Quests book and enter Survival Mode with
+pack-specific block placement and breaking restrictions. Open
 the book to follow the MineColonies chapter. Craft a Supply Camp Deployer or
 Supply Chest Deployer, then use the quest steps to found your colony.
 
@@ -34,9 +40,9 @@ Hooks provide ways to traverse difficult terrain. In Adventure Mode, check
 entrances, loot access, and exits in a disposable new world; some structures
 may require block breaking to navigate.
 
-## Adventure Mode rules
+## Restricted Survival Mode rules
 
-- The first-login Adventure Mode and quest-book grant are implemented in
+- The first-login Survival Mode restriction and quest-book grant are implemented in
   `kubejs/server_scripts/adventure_start.js`; gameplay rules are in
   `kubejs/server_scripts/adventure_rules.js`.
 - The MineColonies quest progression and initial hut rewards are in
@@ -47,9 +53,12 @@ may require block breaking to navigate.
 - The KubeJS rules remove all Ender IO recipes and attempt to block right-click
   crop harvesting. These rules can be adjusted at the top of
   `adventure_rules.js`.
+- The Survival fallback is enabled to preserve restricted block interaction:
+  regular, soul, and redstone torches may be placed, while torches and mob
+  spawners may be broken.
 
-The starter command sets Adventure Mode when a player chooses a colony type.
-For a dedicated server, configure `gamemode=adventure` and
+The starter script sets non-creative players to Survival with restricted
+block placement and breaking. For a dedicated server, configure `gamemode=survival` and
 `force-gamemode=true` in `server.properties` as well.
 
 ## Client keybind defaults

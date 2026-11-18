@@ -4,7 +4,7 @@ PlayerEvents.loggedIn((event) => {
   const player = event.player
 
   if (!player.isCreative()) {
-    player.server.runCommandSilent(`gamemode adventure ${player.username}`)
+    player.server.runCommandSilent(`gamemode survival ${player.username}`)
   }
 
   if (player.stages.has(QUEST_BOOK_STAGE)) return

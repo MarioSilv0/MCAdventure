@@ -9,6 +9,9 @@
 /saves/
 /XaeroWaypoints_BACKUP*/
 /xaero/
+*.log
+hs_err_pid*
+replay_*.mcpr
 
 # CurseForge instance metadata and per-user settings
 /.curseclient
@@ -17,6 +20,27 @@
 /user-prefs.json
 /usercache.json
 /usernamecache.json
+/command_history.txt
+/config/jei/world/
+/config/xaero/
+/config/yo_hooks/
+/config/resourcehud.json
+/config/sodium-fingerprint.json
+/config/sodium-mixins.properties
+/config/sodium-options.json
+/visual_keybinder/
+
+# Mod-generated caches and diagnostics
+/config/jamlib/known_suspicious_jars.txt
+/config/epicfight/native/
+/config/mezz_config/
+/config/mezz_config_gui/
 
 # Installed by the CurseForge modpack
 /mods/
+
+# Backups and bundled example assets
+*.bak
+*.bak.*
+/kubejs/assets/kubejs/textures/block/example_block.png
+/kubejs/assets/kubejs/textures/item/example_item.png

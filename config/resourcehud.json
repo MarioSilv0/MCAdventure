@@ -1,6 +1,6 @@
 {
   "visible": false,
-  "hideComplete": true,
+  "hideComplete": false,
   "bgOpacity": 153,
   "maxRows": 10,
   "scale": 1.0,

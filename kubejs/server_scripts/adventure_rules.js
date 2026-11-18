@@ -23,13 +23,27 @@ const BLOCK_CROP_RIGHT_CLICK = true
 // Use this INSTEAD of Adventure Mode: players stay in Survival, but
 // breaking and placing are cancelled unless allowed below.
 // Leave false while Adventure Mode works.
-const SURVIVAL_FALLBACK = false
+const SURVIVAL_FALLBACK = true
 
 // Items that may still place blocks in the Survival fallback.
 // VERIFY these IDs (use JEI or /give tab-complete).
 const ALLOWED_PLACE_ITEMS = [
   'minecolonies:supplycampdeployer',
   'minecolonies:blockhuttownhall',
+  'minecraft:torch',
+  'minecraft:soul_torch',
+  'minecraft:redstone_torch',
+]
+
+// Blocks that may still be broken in the Survival fallback.
+const ALLOWED_BREAK_BLOCKS = [
+  'minecraft:spawner',
+  'minecraft:torch',
+  'minecraft:wall_torch',
+  'minecraft:soul_torch',
+  'minecraft:soul_wall_torch',
+  'minecraft:redstone_torch',
+  'minecraft:redstone_wall_torch',
 ]
 
 // ---- RECIPES -------------------------------------------------------
@@ -55,14 +69,20 @@ BlockEvents.rightClicked((event) => {
 BlockEvents.broken((event) => {
   if (!SURVIVAL_FALLBACK) return
   if (event.player.isCreative()) return
-  event.cancel()
+  if (ALLOWED_BREAK_BLOCKS.indexOf(event.block.id) === -1) {
+    event.cancel()
+  }
 })
 
 BlockEvents.placed((event) => {
   if (!SURVIVAL_FALLBACK) return
   if (event.player === null || event.player.isCreative()) return
   const held = event.player.mainHandItem.id
-  if (ALLOWED_PLACE_ITEMS.indexOf(held) === -1) {
+  const offHeld = event.player.offHandItem.id
+  if (
+    ALLOWED_PLACE_ITEMS.indexOf(held) === -1 &&
+    ALLOWED_PLACE_ITEMS.indexOf(offHeld) === -1
+  ) {
     event.cancel()
   }
 })
